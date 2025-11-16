@@ -1,0 +1,25 @@
+version: '3.8'
+services:
+  app:
+    build: .
+    environment:
+      - PERSISTENCE=sqlite
+      - DATABASE_URL=sqlite:///./data.db
+    volumes:
+      - ./data.db:/app/data.db
+    networks:
+      - appnet
+
+  nginx:
+    image: nginx:stable
+    ports:
+      - "80:80"
+    volumes:
+      - ./deploy/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - app
+    networks:
+      - appnet
+
+networks:
+  appnet:

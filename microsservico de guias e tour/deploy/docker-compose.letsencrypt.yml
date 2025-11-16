@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  nginx-proxy:
+    image: jwilder/nginx-proxy:latest
+    container_name: nginx-proxy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./deploy/certs:/etc/nginx/certs:rw
+      - ./deploy/vhost.d:/etc/nginx/vhost.d:rw
+      - ./deploy/html:/usr/share/nginx/html:rw
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+    networks:
+      - proxy
+
+  letsencrypt:
+    image: jrcs/letsencrypt-nginx-proxy-companion:latest
+    container_name: nginx-proxy-letsencrypt
+    restart: unless-stopped
+    depends_on:
+      - nginx-proxy
+    volumes:
+      - ./deploy/certs:/etc/nginx/certs:rw
+      - ./deploy/vhost.d:/etc/nginx/vhost.d:rw
+      - ./deploy/html:/usr/share/nginx/html:rw
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - proxy
+
+  # This section augments the `app` service from the base docker-compose.yml
+  app:
+    environment:
+      - VIRTUAL_HOST=example.com
+      - LETSENCRYPT_HOST=example.com
+      - LETSENCRYPT_EMAIL=you@example.com
+    networks:
+      - proxy
+
+networks:
+  proxy:
+    driver: bridge
