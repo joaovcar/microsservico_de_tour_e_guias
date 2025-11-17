@@ -1,1 +1,1 @@
-Acima segue um microsserviço utilizando FastApi, feito inicialmente para aprendizado de como utilizar a API. a versão descompactada contém docker. o arquivo .ZIP, entretanto possui a versõa do projeto utilizando máquina virtual
+Acima segue um microsserviço utilizando FastApi, feito inicialmente para aprendizado de como utilizar a API. a versão descompactada contém docker. o arquivo .ZIP, entretanto possui a versão do projeto utilizando máquina virtual
